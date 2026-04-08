@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HealthHive Pro - Athletic Body</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f0f0f;
+            color: white;
+        }
+
+        header {
+            background: black;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ff88;
+        }
+
+        header h1 {
+            color: #00ff88;
+        }
+
+        /* DAY CARD */
+        .day-card {
+            background: #111;
+            margin: 15px;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0,255,136,0.15);
+            transition: 0.3s;
+        }
+
+        .day-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(0,255,136,0.3);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* CENTER BOX */
+        .inner-box {
+            width: 120px;
+            height: 120px;
+            background: white;
+            color: black;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin: auto;
+        }
+
+        .inner-box h3 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        /* START BUTTON RIGHT */
+        .start-btn {
+            background: #00ff88;
+            color: black;
+            padding: 14px 28px;
+            border-radius: 25px;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .start-btn:hover {
+            background: #00cc6a;
+        }
+
+        /* EXERCISE LIST */
+        .exercise {
+            display: flex;
+            align-items: center;
+            background: #111;
+            margin: 10px;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,255,136,0.1);
+        }
+
+        .exercise img {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* WORKOUT SCREEN */
+        #exerciseGif {
+            display: block;
+            margin: 20px auto;
+            width: 200px;
+            height: 200px;
+        }
+
+        #timer {
+            text-align: center;
+            font-size: 40px;
+            color: #00ff88;
+        }
+
+        #currentExercise {
+            text-align: center;
+            font-size: 26px;
+        }
+
+        /* BUTTONS */
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 25px;
+            background: #00ff88;
+            color: black;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00cc6a;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Athletic Body Program</h1>
+</header>
+
+<section id="planSection">
+    <div id="daysContainer"></div>
+    <button onclick="window.location.href='programs.html'">Programs</button>
+    <button onclick="window.location.href='Aesthetic.html'">Back</button>
+</section>
+
+<section id="exerciseSection" class="hidden">
+    <h2 id="dayTitle" style="text-align:center;"></h2>
+    <div id="exerciseList"></div>
+    <button onclick="startWorkout()">Start Workout</button>
+    <button onclick="goBack()">⬅ Back</button>
+</section>
+
+<section id="workoutSection" class="hidden">
+    <h2 id="currentExercise"></h2>
+    <img id="exerciseGif" src="">
+    <div id="timer"></div>
+
+    <button onclick="nextExercise()">Next</button>
+    <button onclick="exitWorkout()">⬅ Back to Days</button>
+</section>
+
+<script>
+
+// SAME WORKOUT PLAN (unchanged)
+const workoutPlan = {
+1: [
+ {name:"Barbell Squat", img:"https://i.imgur.com/8Km9tLL.gif", reps:"4 x 8"},
+ {name:"Dumbbell Lunges", img:"https://i.imgur.com/4A2hQ.gif", reps:"3 x 12"},
+ {name:"Deadlift", img:"https://i.imgur.com/8Km9tLL.gif", reps:"3 x 8"},
+ {name:"Jump Squats", img:"https://i.imgur.com/W5z8n.gif", reps:"12 reps"},
+ {name:"Plank", img:"https://i.imgur.com/8dL4b.gif", reps:"45 sec"},
+ {name:"Mountain Climbers", img:"https://i.imgur.com/7yUvePI.gif", reps:"30 sec"}
+],
+
+2: [
+ {name:"Barbell Bench Press", img:"https://i.imgur.com/Z6X4F.gif", reps:"4 x 8"},
+ {name:"Lat Pulldown", img:"https://i.imgur.com/Z6X4F.gif", reps:"3 x 12"},
+ {name:"Seated Row", img:"https://i.imgur.com/Z6X4F.gif", reps:"3 x 12"},
+ {name:"Overhead Shoulder Press", img:"https://i.imgur.com/Z6X4F.gif", reps:"3 x 10"},
+ {name:"Push-ups", img:"https://i.imgur.com/Z6X4F.gif", reps:"15 reps"},
+ {name:"Burpees", img:"https://i.imgur.com/W5z8n.gif", reps:"10 reps"}
+],
+
+3: [
+ {name:"High Knees", img:"https://i.imgur.com/7yUvePI.gif", reps:"30 sec"},
+ {name:"Jumping Jacks", img:"https://i.imgur.com/7yUvePI.gif", reps:"30 sec"},
+ {name:"Cross Crunch", img:"https://i.imgur.com/6tZ6p.gif", reps:"20 reps"},
+ {name:"Leg Raise", img:"https://i.imgur.com/Tq9xX.gif", reps:"15 reps"},
+ {name:"Plank", img:"https://i.imgur.com/8dL4b.gif", reps:"40 sec"},
+ {name:"Burpees", img:"https://i.imgur.com/W5z8n.gif", reps:"12 reps"}
+],
+
+4: [
+ {name:"Deadlift", img:"https://i.imgur.com/8Km9tLL.gif", reps:"3 x 8"},
+ {name:"Squats", img:"https://i.imgur.com/8Km9tLL.gif", reps:"15 reps"},
+ {name:"Push-ups", img:"https://i.imgur.com/Z6X4F.gif", reps:"15 reps"},
+ {name:"Rear Delt Fly", img:"https://i.imgur.com/Z6X4F.gif", reps:"12 reps"},
+ {name:"Mountain Climbers", img:"https://i.imgur.com/7yUvePI.gif", reps:"30 sec"},
+ {name:"Burpees", img:"https://i.imgur.com/W5z8n.gif", reps:"12 reps"}
+],
+
+5: [
+ {name:"Barbell Curl", img:"https://i.imgur.com/Z6X4F.gif", reps:"3 x 10"},
+ {name:"Hammer Curl", img:"https://i.imgur.com/Z6X4F.gif", reps:"3 x 12"},
+ {name:"Tricep Pushdown", img:"https://i.imgur.com/Z6X4F.gif", reps:"3 x 12"},
+ {name:"Bench Dips", img:"https://i.imgur.com/Z6X4F.gif", reps:"12 reps"},
+ {name:"Plank", img:"https://i.imgur.com/8dL4b.gif", reps:"45 sec"},
+ {name:"High Knees", img:"https://i.imgur.com/7yUvePI.gif", reps:"30 sec"}
+]
+};
+
+let currentWorkout = [];
+let currentIndex = 0;
+let timerInterval;
+
+const daysContainer = document.getElementById("daysContainer");
+
+// CREATE DAYS
+for(let i=1;i<=30;i++){
+    let day = document.createElement("div");
+    day.className = "day-card";
+
+    day.innerHTML = `
+        <div class="day-header">
+            <div class="inner-box">
+                <h3>Day ${i}</h3>
+                <p>Workout</p>
+            </div>
+
+            <button class="start-btn" onclick="event.stopPropagation(); startFromCard(${i})">
+                Start
+            </button>
+        </div>
+    `;
+
+    day.onclick = () => showExercises(i);
+    daysContainer.appendChild(day);
+}
+
+// FUNCTIONS SAME
+function startFromCard(day){
+    showExercises(day);
+    setTimeout(startWorkout,200);
+}
+
+function showExercises(day){
+    document.getElementById("planSection").classList.add("hidden");
+    document.getElementById("exerciseSection").classList.remove("hidden");
+
+    document.getElementById("dayTitle").innerText = "Day " + day;
+
+    let list = document.getElementById("exerciseList");
+    list.innerHTML = "";
+
+    let dayIndex = ((day - 1) % 5) + 1;
+    currentWorkout = workoutPlan[dayIndex];
+
+    currentWorkout.forEach(ex=>{
+        let div = document.createElement("div");
+        div.className = "exercise";
+        div.innerHTML = `
+            <img src="${ex.img}">
+            <div>
+                <h4>${ex.name}</h4>
+                <p>${ex.reps}</p>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function startWorkout(){
+    document.getElementById("exerciseSection").classList.add("hidden");
+    document.getElementById("workoutSection").classList.remove("hidden");
+
+    currentIndex = 0;
+    runExercise();
+}
+
+function runExercise(){
+    if(currentIndex >= currentWorkout.length){
+        alert("Workout Completed 🏃🔥");
+        location.reload();
+        return;
+    }
+
+    let ex = currentWorkout[currentIndex];
+
+    document.getElementById("currentExercise").innerText = ex.name;
+    document.getElementById("exerciseGif").src = ex.img;
+
+    let time = 35;
+    document.getElementById("timer").innerText = time;
+
+    timerInterval = setInterval(()=>{
+        time--;
+        document.getElementById("timer").innerText = time;
+
+        if(time <= 0){
+            clearInterval(timerInterval);
+            currentIndex++;
+            runExercise();
+        }
+    },1000);
+}
+
+function nextExercise(){
+    clearInterval(timerInterval);
+    currentIndex++;
+    runExercise();
+}
+
+function exitWorkout(){
+    clearInterval(timerInterval);
+    document.getElementById("workoutSection").classList.add("hidden");
+    document.getElementById("planSection").classList.remove("hidden");
+}
+
+function goBack(){
+    document.getElementById("planSection").classList.remove("hidden");
+    document.getElementById("exerciseSection").classList.add("hidden");
+}
+
+</script>
+
+</body>
+</html>

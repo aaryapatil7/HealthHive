@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f1f8e9;   /* soft light green */
+}
+
+/* Header */
+header {
+    background-color: #2e7d32;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.logo {
+    font-size: 32px;   /* Bigger HealthHive title */
+}
+
+/* Form Section */
+section {
+    background-color: white;
+    width: 350px;
+    margin: 40px auto;
+    padding: 25px;
+    text-align: left;
+}
+
+/* Headings */
+h2 {
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Inputs */
+label {
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #43a047;
+    color: white;
+    border: none;
+    border-radius: 20px;   /* Rounded corners */
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2e7d32;
+}
